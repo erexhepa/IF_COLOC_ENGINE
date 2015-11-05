@@ -118,20 +118,7 @@ def addBook(isbn, filename):
     newBooks[isbn] = [filename]
 
 
-
-# def main():
-    #options, args = parser.parse_args()
-    #if (len(args) >= 1): parser.error('arguments are not allowed')
-    #if (options.dir is None): sys.exit(1)
-
-
-
-if __name__=='__main__':
-    newBooks = {}
-    deleteBooks = []
-    path = ''
-    path = '/archives/biocomp/rexhepaj/Telechargement/'
-
+def get_isbn(path):
     regex = re.compile('(?:[0-9]{3}-)?[0-9]{1,5}-[0-9]{1,7}-[0-9]{1,6}-[0-9]')
     for infile in glob.glob(os.path.join(path, '*.pdf')):
         os.system('pdftotext -f 1 -l 100 "' + infile + '"')
@@ -152,3 +139,26 @@ if __name__=='__main__':
         print isbn + " >> " + ''.join(bookName)
 
     pickle.dump(newBooks, open("saveLibrayISBN.p", "wb"))
+
+    return newBooks
+
+
+def get_isbnrecords(isbnBooks):
+    isbnRec = {}
+
+    print 'debug'
+
+    return  isbnRec
+
+
+if __name__=='__main__':
+    newBooks = {}
+    deleteBooks = []
+    path = ''
+    path = '/archives/biocomp/rexhepaj/Telechargement/'
+
+    #newBooksISBNs = get_isbn(path)
+    newBooksISBNs = pickle.load('saveLibraryISBN.p',"rb")
+    newBooksRec   = get_isbnrecords(newBooksISBNs)
+
+    print 'END'
