@@ -377,6 +377,8 @@ class BookMeta:
         return str
 
     def rename(self):
+        renameFname = ''
+
         meta = self.get_mata()
         dirname = os.path.dirname(self.filename)
         if len(meta) > 0:
@@ -396,7 +398,8 @@ class BookMeta:
             new_filename = os.path.join(dirname, new_filename)
             log = 'Rename "' + self.filename + '" to "' + new_filename + '"'
             try:
-                os.rename(self.filename, new_filename)
+                #os.rename(self.filename, new_filename)
+                renameFname = new_filename
                 logger.debug(log)
                 logger.debug('')
                 self.recorder.write(log + '\r\n')
@@ -404,11 +407,12 @@ class BookMeta:
                 exfilename = 'TSIXE-NUM' + str(randint(1, 65535)) + '_' + os.path.basename(self.filename)
                 exfilename = os.path.join(dirname, exfilename)
                 exlog = 'Rename "' + self.filename + '" to "' + exfilename + '"'
-                try:
-                    os.rename(self.filename, exfilename)
-                    logger.error('!!!!!! [Existed File]: ' + new_filename + ' !!!!!!')
-                except:
-                    logger.error('!!!!!! [Renaming Fail]: ' + exlog + ' !!!!!!')
+                renameFname = exfilename
+                #try:
+                #    os.rename(self.filename, exfilename)
+                #    logger.error('!!!!!! [Existed File]: ' + new_filename + ' !!!!!!')
+                #except:
+                #    logger.error('!!!!!! [Renaming Fail]: ' + exlog + ' !!!!!!')
         else:
             if self.isbnfound:
                 if self.status == self.STATUS_HTTPERROR:
@@ -421,7 +425,12 @@ class BookMeta:
                 new_filename = 'DELIAF_' + os.path.basename(self.filename)
             new_filename = os.path.join(dirname, new_filename)
             log = 'Rename "' + self.filename + '" to "' + new_filename + '"'
-            try:
-                os.rename(self.filename, new_filename)
-            except:
-                logger.error('!!!!!! [Renaming Fail]: ' + log + ' !!!!!!')
+
+            renameFname = new_filename
+
+            #try:
+            #    os.rename(self.filename, new_filename)
+            #except:
+            #    logger.error('!!!!!! [Renaming Fail]: ' + log + ' !!!!!!')
+
+        return renameFname
