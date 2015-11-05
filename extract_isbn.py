@@ -118,6 +118,16 @@ def addBook(isbn, filename):
     newBooks[isbn] = [filename]
 
 
+def line2isbn(lineTxt):
+    regex = re.compile('(?:[0-9]{3}-)?[0-9]{1,5}-[0-9]{1,7}-[0-9]{1,6}-[0-9]')
+
+    isbn_valid = []
+    isbn_candidates = regex.findall(lineTxt)
+    for candidate in isbn_candidates:
+        modified_candidate = strip(candidate)
+        if valid(modified_candidate): isbn_valid.append(candidate)
+
+
 def get_isbn(path):
     regex = re.compile('(?:[0-9]{3}-)?[0-9]{1,5}-[0-9]{1,7}-[0-9]{1,6}-[0-9]')
     for infile in glob.glob(os.path.join(path, '*.pdf')):

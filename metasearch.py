@@ -23,12 +23,18 @@ import os
 import subprocess
 import time
 import zipfile
-
+import extract_isbn
 import isbnlib
+
+import glob
+import re
+from optparse import OptionParser
+import pickle
 
 logger = logging.getLogger(__name__)
 
 class EpubParser(HTMLParser.HTMLParser):
+
     def __init__(self, filename):
         HTMLParser.HTMLParser.__init__(self)
         self.filename = filename
@@ -80,7 +86,7 @@ class BookMeta:
     ISBN13_PATTERN_2 = re.compile(r'ISBN[\x20\w\t\(\)]{0,40}97[89]\d{10}(?:\s|$)')
     ISBN_PATTERN = [ISBN13_PATTERN_1, ISBN10_PATTERN_1, ISBN13_PATTERN_2, ISBN10_PATTERN_2]
     MAX_HTTP_RETRY = 2
-    MAX_ISBN_COUNT = 5
+    MAX_ISBN_COUNT = 50
     LONG_SLEEP = 300
     SHORT_SLEEP = 5
     STATUS_OK = 0
@@ -158,23 +164,26 @@ class BookMeta:
         return isbns
 
     def get_isbns(self, texts):
+
         # logger.debug('[ ' + texts + ' ]')
         lines = texts.splitlines()
         countdown = 100  # for finding other ISBNs
         found = False
         isbns = []
         for line in lines:
+            #candidates = line(line)
             candidates = self.get_canonical_isbn(line)
-            # candidates = self.get_canonical_isbn2(line)
+            #candidates = self.get_canonical_isbn2(line)
             for isbn in candidates:
                 if isbn not in self.SPECIAL_ISBN and not any(isbn in s for s in isbns):
                     isbns.append(isbn)
                     found = True
             if found:
                 countdown -= 1
+                found = False
             if countdown < 1:
                 break
-        self.isbnfound = found
+        self.isbnfound = (len(isbns)>0)
         if len(isbns) < 1:
             logger.debug('Not Found ISBN in ' + self.filename)
         else:

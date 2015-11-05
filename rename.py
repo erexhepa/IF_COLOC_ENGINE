@@ -4,7 +4,7 @@ import logging
 import time
 import datetime
 import pickle
-import json
+
 
 from metasearch import BookMeta
 
@@ -14,7 +14,7 @@ IGNORE_PREFIX = ['EMANER_', 'DELIAF_', 'NRAW_', 'TSIXE-NUM', 'RORREPTTH_', 'YNAM
 if __name__ == '__main__':
         newBooks = {}
 
-        path = '/archives/biocomp/rexhepaj/Telechargement/isbn_book/'
+        path = '/home/eltonr/Downloads/'
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         console = logging.StreamHandler()
         console.setLevel(logging.DEBUG)
@@ -30,9 +30,14 @@ if __name__ == '__main__':
         logging.debug('filesystemencoding = ' + sys.getfilesystemencoding())
         for root, dirs, files in os.walk(unicode(path, sys.getfilesystemencoding())):
             for f in files:
-                if f.endswith(('.pdf', '.epub')) and not f.startswith('EMANER_') and not f.startswith(
+                #if f.endswith(('.pdf', '.epub')) and not f.startswith('EMANER_') and not f.startswith(
+                if f.endswith(('.epub')) and not f.startswith('EMANER_') and not f.startswith(
                         'DELIAF_') and not f.startswith('NRAW_') and not f.startswith('TSIXE-NUM') and not f.startswith(
                         'RORREPTTH_') and not f.startswith('YNAMOOT_'):
+
+                    if f.endswith('.epub'):
+                        print "EPUB"
+
                     filename = os.path.join(root, f)
                     logger.debug('====== ====== ====== ====== ====== ======')
                     logger.debug('Processing ' + filename)
