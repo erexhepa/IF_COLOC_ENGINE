@@ -21,7 +21,6 @@ import logging
 import time
 import datetime
 
-sys.path.append("../bookinfo")
 from metasearch import BookMeta
 
 logger = logging.getLogger('metasearch')
