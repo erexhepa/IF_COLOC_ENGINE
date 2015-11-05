@@ -30,8 +30,8 @@ if __name__ == '__main__':
         logging.debug('filesystemencoding = ' + sys.getfilesystemencoding())
         for root, dirs, files in os.walk(unicode(path, sys.getfilesystemencoding())):
             for f in files:
-                #if f.endswith(('.pdf', '.epub')) and not f.startswith('EMANER_') and not f.startswith(
-                if f.endswith(('.epub')) and not f.startswith('EMANER_') and not f.startswith(
+                if f.endswith(('.pdf', '.epub')) and not f.startswith('EMANER_') and not f.startswith(
+                #if f.endswith(('.epub')) and not f.startswith('EMANER_') and not f.startswith(
                         'DELIAF_') and not f.startswith('NRAW_') and not f.startswith('TSIXE-NUM') and not f.startswith(
                         'RORREPTTH_') and not f.startswith('YNAMOOT_'):
 
