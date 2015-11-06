@@ -166,11 +166,14 @@ class BookMeta:
     def get_isbns(self, texts):
 
         # logger.debug('[ ' + texts + ' ]')
-        lines = texts.splitlines()
+
+        lines = [line for line in texts.split('\n') if line.strip() != '']
+        linesFiltered = lines[1:100]
+
         countdown = 100  # for finding other ISBNs
         found = False
         isbns = []
-        for line in lines:
+        for line in linesFiltered:
             #candidates = line(line)
             candidates = self.get_canonical_isbn(line)
             #candidates = self.get_canonical_isbn2(line)
@@ -234,6 +237,7 @@ class BookMeta:
         meta = {}
         logger.debug('Searching ' + isbn + ' on ' + self.isbndb)
         count = 0
+        #self.isbndb = 'wcat'
         while count <= self.MAX_HTTP_RETRY:
             try:
                 meta = isbnlib.meta(isbn,  self.isbndb)
@@ -256,8 +260,17 @@ class BookMeta:
                         self.status = self.STATUS_NOTFOUND
                     break
             else:
-                self.print_metadata(meta)
-                break
+                if(meta is None):
+                    meta = []
+                    logger.debug('Exception: ' )
+                    logger.debug('Metadata of ISBN ' + isbn + ' Not Found')
+                    logger.debug('')
+                    if self.status != self.STATUS_HTTPERROR:
+                        self.status = self.STATUS_NOTFOUND
+                    break
+                else:
+                    self.print_metadata(meta)
+                    break
         if count > self.MAX_HTTP_RETRY:
             self.status = self.STATUS_HTTPERROR
         return meta
@@ -270,6 +283,7 @@ class BookMeta:
                 break
             if len(meta) > 0:
                 meta_array.append(meta)
+                break
             time.sleep(self.SHORT_SLEEP)  # avoid http 403 error
         result = {}
         if len(meta_array) > 0:
