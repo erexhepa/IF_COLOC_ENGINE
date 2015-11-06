@@ -30,22 +30,25 @@ def searchisbnmeta_fileindex(fileindx):
     logger.addHandler(fh)
     recorder = open(logname + '_Rename.log', 'w')
     logging.debug('filesystemencoding = ' + sys.getfilesystemencoding())
-
+    i = 0
     for filename in fileindx:
         logger.debug('====== ====== ====== ====== ====== ======')
         logger.debug('Processing ' + filename)
         bookmeta = BookMeta(filename, recorder, 'goob', 'Publisher:Author:Year:Title:Language:ISBN-13')
-
-        newName = bookmeta.rename()
+        i=i+1
+        newName,isbn = bookmeta.rename()
         print newName
-        newBooks[filename] = [newName]
+        newBooks[filename] = [newName,isbn]
+
+        if ((i%100)==0):
+            pickle.dump(newBooks, open("saveLibrayISBNnew.pkl", "wb"))
 
     recorder.close()
 
-    return fileindxMeta
+    return newBooks
 
 def build_fileindex(path):
-
+    import time
     fileindx = []
 
     for root, dirs, files in os.walk(unicode(path, sys.getfilesystemencoding())):
@@ -55,7 +58,6 @@ def build_fileindex(path):
                 'RORREPTTH_') and not f.startswith('YNAMOOT_'):
                 filename = os.path.join(root, f)
                 fileindx.append(filename)
-
 
     pickle.dump(fileindx, open("saveLibrayFileindx.pkl", "wb"))
     print 'END'

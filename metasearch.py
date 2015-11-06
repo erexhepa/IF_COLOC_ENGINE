@@ -101,6 +101,7 @@ class BookMeta:
         self.pattern = self.check_pattern(pattern)
         self.isbnfound = False
         self.status = self.STATUS_OK
+        self.isbnid = ""
 
     def check_pattern(self, patt):
         fields = []
@@ -192,15 +193,21 @@ class BookMeta:
         else:
             logger.debug(self.filename + ' has ' + str(len(isbns)) + ' ISBN')
             logger.debug(isbns)
+            self.isbnid = isbns[0]
+
         logger.debug('')
         return isbns
 
     def extract_texts(self, args):
+        import time
+
         cmd = 'java -jar tika-app-1.8.jar -t -eUTF-8 ' + args + ' "' + self.filename + '"'
-        # cmd = 'java -jar pdfbox-app-1.8.9.jar ExtractText -sort -console "' + self.filename + '"'
+        ## cmd = 'java -jar pdfbox-app-1.8.9.jar ExtractText -sort -console "' + self.filename + '"'
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         (output, err) = process.communicate()
-        # logger.debug(err)
+
+        time.sleep(3)
+        logger.debug(err)
         return output
 
     def extract_epub_texts(self):
@@ -456,4 +463,4 @@ class BookMeta:
             #except:
             #    logger.error('!!!!!! [Renaming Fail]: ' + log + ' !!!!!!')
 
-        return renameFname
+        return renameFname, self.isbnid
