@@ -30,12 +30,16 @@ def searchisbnmeta_fileindex(fileindx):
     logger.addHandler(fh)
     recorder = open(logname + '_Rename.log', 'w')
     logging.debug('filesystemencoding = ' + sys.getfilesystemencoding())
-    i = 0
-    for filename in fileindx:
+    newBooks = dicBooks = pickle.load(open('saveLibrayISBNnew.pkl','rb'))
+    keysFnames = dicBooks.viewkeys()
+    # i = 0
+
+    for i in range(keysFnames.__len__(),fileindx.__len__()):
+        filename = fileindx[i]
         logger.debug('====== ====== ====== ====== ====== ======')
         logger.debug('Processing ' + filename)
         bookmeta = BookMeta(filename, recorder, 'goob', 'Publisher:Author:Year:Title:Language:ISBN-13')
-        i=i+1
+        #i=i+1
         newName,isbn = bookmeta.rename()
         print newName
         newBooks[filename] = [newName,isbn]

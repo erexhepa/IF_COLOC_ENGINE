@@ -244,7 +244,9 @@ class BookMeta:
         meta = {}
         logger.debug('Searching ' + isbn + ' on ' + self.isbndb)
         count = 0
-        #self.isbndb = 'wcat'
+        self.isbndb = 'isbndb'
+        isbnlib.config.add_apikey('isbndb', 'LW3LP8ZB')
+
         while count <= self.MAX_HTTP_RETRY:
             try:
                 meta = isbnlib.meta(isbn,  self.isbndb)
